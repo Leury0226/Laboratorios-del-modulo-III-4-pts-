@@ -1,0 +1,61 @@
+============================================================
+PRACTICA 3 – Configuración de SSH con autenticación por clave
+============================================================
+
+# 1 Configurar la VM en modo Bridge
+-----------------------------------
+# Esto se hace desde la configuración de la VM en VirtualBox o VMware:
+# - Apagar la VM.
+# - Ir a la configuración de Red.
+# - Cambiar el Adaptador 1 a "Bridged Adapter".
+# - Encender la VM.
+
+# 2 Validar conectividad desde el Host (Windows)
+-----------------------------------
+# En la VM (Kali Linux), verificar la IP:
+ip addr show
+
+# Desde el host Windows, abrir CMD y ejecutar:
+ping <IP_de_la_VM>
+
+# 3 Habilitar y activar el servicio SSH en la VM
+-----------------------------------
+sudo apt update && sudo apt install openssh-server -y   # Instalar servidor SSH
+sudo systemctl enable ssh                               # Habilitar inicio automático
+sudo systemctl start ssh                                # Iniciar servicio
+sudo systemctl status ssh                               # Verificar que está activo
+
+# 4 Probar conexión SSH desde Windows con usuario y contraseña
+-----------------------------------
+# En Windows (CMD o PowerShell):
+# ssh leury@<IP_de_la_VM>
+
+# 5 Generar un par de llaves SSH en Windows
+-----------------------------------
+# En Windows (CMD o PowerShell):
+ssh-keygen
+
+# Durante la generación:
+# - Preguntará la ruta para guardar: especifica algo como C:\Users\<TuUsuario>\.ssh\id_rsa
+# - Passphrase: presiona Enter para dejarlo en blanco.
+# Esto generará dos archivos:
+# - id_rsa (clave privada)
+# - id_rsa.pub (clave pública)
+
+# 6 Copiar la clave pública al servidor Linux
+-----------------------------------
+# En Windows (PowerShell o CMD):
+scp C:\Users\leury\.ssh\id_rsa.pub leury@192.168.100.22:/home/leury/
+
+# En la VM (Kali Linux):
+mkdir -p /home/leury/.ssh                # Crear carpeta .ssh si no existe
+cat /home/leury/id_rsa.pub >> /home/leury/.ssh/authorized_keys
+chmod 700 /home/leury/.ssh               # Permisos de la carpeta
+chmod 600 /home/leury/.ssh/authorized_keys  # Permisos del archivo
+rm /home/leury/id_rsa.pub                 # Borrar clave pública suelta por seguridad
+
+# 7 Probar conexión SSH sin contraseña
+# -----------------------------------
+# En Windows:
+ssh leury@<IP_de_la_VM>
+# Si la configuración es correcta, entrará directamente sin pedir credenciales.
