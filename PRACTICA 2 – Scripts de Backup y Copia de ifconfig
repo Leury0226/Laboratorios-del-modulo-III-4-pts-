@@ -1,0 +1,63 @@
+============================================================
+PRACTICA 2 – Script de Backup y Script de ifconfig (usuario leury)
+============================================================
+
+# 1 SCRIPT PARA RESPALDAR /home/leury USANDO TAR
+
+# Crear el archivo del script
+nano backup_home_leury.sh
+
+# Contenido del script:
+----------------------------------------
+!/bin/bash
+# Script para crear un respaldo comprimido de /home/leury
+# El nombre del archivo tendrá la fecha y hora actuales en formato dd-mm-yyyy_HH:MM
+
+# Obtener la fecha y hora actual
+DATE=$(date +"%d-%m-%Y_%H-%M")
+
+# Ruta donde se guardará el backup
+FILE="/home/leury/backup_${DATE}.tar.gz"
+
+# Crear el backup usando tar
+tar -czvf "$FILE" "/home/leury"
+
+echo "✅ Backup creado en: $FILE"
+# ----------------------------------------
+
+# Dar permisos de ejecución
+chmod +x backup_home_leury.sh
+
+# Ejecutar el script
+./backup_home_leury.sh
+
+
+
+# 2 SCRIPT QUE GUARDA LA SALIDA DE ifconfig EN EL ESCRITORIO
+#    Pidiendo al usuario el nombre del archivo
+
+# Crear el archivo del script
+nano save_ifconfig_leury.sh
+
+# Contenido del script:
+----------------------------------------
+!/bin/bash
+# Script que guarda el resultado del comando ifconfig en un archivo en el escritorio
+
+# Preguntar al usuario el nombre del archivo
+read -p "Ingrese el nombre para el archivo (sin extensión): " NAME
+
+# Ruta del archivo en el escritorio
+FILE="/home/leury/Desktop/${NAME}.txt"
+
+# Guardar la salida de ifconfig en el archivo
+ifconfig > "$FILE"
+
+echo "Archivo creado en: $FILE"
+----------------------------------------
+
+# Dar permisos de ejecución
+chmod +x save_ifconfig_leury.sh
+
+# Ejecutar el script
+./save_ifconfig_leury.sh
